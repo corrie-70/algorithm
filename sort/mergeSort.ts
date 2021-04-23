@@ -47,3 +47,7 @@ function concatArray(arr1: number[], arr2: number[]): number[] {
     }
     return temp;
 }
+
+const arr = [9, 3, 40, 23, 42, 13, 1, 33, 6, 5, 7];
+
+console.log(mergeSort(arr));
