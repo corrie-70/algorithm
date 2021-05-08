@@ -6,19 +6,35 @@
  * 时间复杂度O(nlogn) 空间复杂度O(n) 稳定排序 非原地排序
  */
 function mergeSort(arr: number[]): number[] {
-    return _mergeSort(arr);
+    return mergeRecursiveSort(arr);
 }
 
-function _mergeSort(tempArr: number[]): number[] {
+/**
+ * 递归实现分组
+ * @param tempArr
+ * @returns
+ */
+function mergeRecursiveSort(tempArr: number[]): number[] {
     const len = tempArr.length;
     if (len <= 1) {
         return tempArr;
     }
     const h = Math.floor(len / 2);
-    const tempArr1 = _mergeSort(tempArr.slice(0, h));
-    const tempArr2 = _mergeSort(tempArr.slice(h));
+    const tempArr1 = mergeRecursiveSort(tempArr.slice(0, h));
+    const tempArr2 = mergeRecursiveSort(tempArr.slice(h));
     return concatArray(tempArr1, tempArr2);
 }
+
+/**
+ * 迭代实现分组
+ * @param tempArr 
+ */
+// function mergeIterativeSort(tempArr: number[]): number[] {
+//     const len = tempArr.length;
+//     for (let index = 2; index < len; index += index) {
+        
+//     }
+// }
 
 /**
  * 合并已排序完成的两个数组
