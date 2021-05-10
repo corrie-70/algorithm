@@ -4,35 +4,34 @@ function MyPromise(executor) {
     this.reason = null;
 
     /** 执行成功回调 */
-    this.onFulfilled = [];
+    this.onFulfilledCallbacks = [];
     /** 执行失败回调 */
-    this.onRejected = [];
+    this.onRejectedCallbacks = [];
 
-    var _this = this;
+    var self = this;
 
     function resolve(value) {
-        if (_this.status === "pending") {
-            _this.status = "fulfilled";
-            _this.value = value;
+        if (self.status === "pending") {
+            self.status = "fulfilled";
+            self.value = value;
 
             // 执行成功回调
-            _this.onFulfilled.forEach(fn => fn(_this.value));
+            self.onFulfilledCallbacks.forEach(fn => fn(self.value));
         }
     };
 
     function reject(reason) {
-        if (_this.status === "pending") {
-            _this.status = "rejected";
-            _this.reason = reason;
+        if (self.status === "pending") {
+            self.status = "rejected";
+            self.reason = reason;
             // 执行成功回调
-            _this.onRejected.forEach(fn => fn(_this.reason));
+            self.onRejectedCallbacks.forEach(fn => fn(self.reason));
         }
     };
 
     try {
         executor(resolve, reject);
-    }
-    catch (e) {
+    } catch (e) {
         reject(e);
     }
 }
@@ -41,10 +40,13 @@ function resolvePromise(promise, x, resolve, reject) {
     if (promise === x) {
         reject(new TypeError("Chaining cycle"));
     }
-    if (x && (typeof x === "object" || typeof x === "function")) {
+
+    if (x && typeof x === "object" || typeof x === "function") {
         var used = false;
+
         try {
             var thenable = x.then;
+            
             if (typeof thenable === "function") {
                 // x为promise
                 thenable.call(x, function (y) {
@@ -59,38 +61,34 @@ function resolvePromise(promise, x, resolve, reject) {
                     reject(r);
                 });
             } else {
-                if (used)
-                    return;
-                used = true;
                 resolve(x);
             }
         } catch (error) {
             if (used)
                 return;
-            used = true;
+
             reject(error);
         }
-    }
-    else {
+    } else {
         resolve(x);
     }
 };
 
 MyPromise.prototype.then = function (onFulfilled, onRejected) {
-    var fulfilled = typeof onFulfilled === "function" ? onFulfilled : value => value;
-    var rejected = typeof onRejected === "function"
-        ? onFulfilled
+    onFulfilled = typeof onFulfilled === "function" ? onFulfilled : value => value;
+    onRejected = typeof onRejected === "function"
+        ? onRejected
         : (reason) => {
             throw reason;
         };
 
-    var _this = this;
+    var self = this;
 
     var promise2 = new MyPromise(function (resolve, reject) {
-        if (_this.status === "fulfilled") {
+        if (self.status === "fulfilled") {
             setTimeout(function () {
                 try {
-                    var x = fulfilled(_this.value);
+                    var x = onFulfilled(self.value);
                     resolvePromise(promise2, x, resolve, reject);
                 }
                 catch (error) {
@@ -98,10 +96,10 @@ MyPromise.prototype.then = function (onFulfilled, onRejected) {
                 }
             }, 0);
         }
-        if (_this.status === "rejected") {
+        if (self.status === "rejected") {
             setTimeout(function () {
                 try {
-                    var x = rejected(_this.reason);
+                    var x = onRejected(self.reason);
                     resolvePromise(promise2, x, resolve, reject);
                 }
                 catch (error) {
@@ -109,11 +107,11 @@ MyPromise.prototype.then = function (onFulfilled, onRejected) {
                 }
             }, 0);
         }
-        if(_this.status === "pending") {
-            _this.onFulfilled.push(function () {
+        if (self.status === "pending") {
+            self.onFulfilledCallbacks.push(function () {
                 setTimeout(function () {
                     try {
-                        var x = fulfilled(_this.value);
+                        var x = onFulfilled(self.value);
                         resolvePromise(promise2, x, resolve, reject);
                     }
                     catch (error) {
@@ -121,10 +119,11 @@ MyPromise.prototype.then = function (onFulfilled, onRejected) {
                     }
                 }, 0);
             });
-            _this.onRejected.push(function () {
+
+            self.onRejectedCallbacks.push(function () {
                 setTimeout(function () {
                     try {
-                        var x = rejected(_this.reason);
+                        var x = onRejected(self.reason);
                         resolvePromise(promise2, x, resolve, reject);
                     }
                     catch (error) {
@@ -137,6 +136,7 @@ MyPromise.prototype.then = function (onFulfilled, onRejected) {
     return promise2;
 };
 
+// for promises-aplus-tests
 MyPromise.defer = MyPromise.deferred = function () {
     let dfd = {};
     dfd.promise = new MyPromise((resolve, reject) => {
