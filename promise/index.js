@@ -46,18 +46,20 @@ function resolvePromise(promise, x, resolve, reject) {
 
         try {
             var thenable = x.then;
-            
+
             if (typeof thenable === "function") {
                 // x为promise
                 thenable.call(x, function (y) {
                     if (used)
                         return;
                     used = true;
+
                     resolvePromise(promise, y, resolve, reject);
                 }, function (r) {
                     if (used)
                         return;
                     used = true;
+                    
                     reject(r);
                 });
             } else {
