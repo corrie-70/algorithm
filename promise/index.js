@@ -144,7 +144,7 @@ function resolvePromise(promise, x, resolve, reject) {
 
                 return;
             }
-            
+
             resolve(x);
         } catch (error) {
             // 2.3.3.3.4 如果调用then抛出异常，如果 resolvePromise 或 rejectPromise 已经被调用，那么忽略
@@ -159,6 +159,148 @@ function resolvePromise(promise, x, resolve, reject) {
     resolve(x);
 }
 
+Promise.resolve = function (param) {
+    // 如果参数为promise对象，返回该对象
+    if (param instanceof Promise) {
+        return param;
+    }
+
+    // 如果是thenable对象，返回的promise会跟随该对象，采用其最终状态
+    return new Promise((resolve, reject) => {
+        if (param && param.then && typeof then === 'function') {
+            setTimeout(() => {
+                param.then(resolve, reject);
+            }, 0);
+        } else {
+            resolve(param);
+        }
+    })
+}
+
+Promise.reject = function (param) {
+    return new Promise((resolve, reject) => {
+        reject(param);
+    })
+}
+
+Promise.prototype.catch = function (onRejected) {
+    // 返回新的promise，是特殊的then方法
+    return this.then(null, onRejected);
+}
+
+Promise.prototype.finally = function (onFinally) {
+    // 返回值为promise，不管成功或失败都会执行onFinally
+    // 还能继续then，所以需要传递promise状态
+    return this.then(
+        // 执行onFinally函数后，继续传递原promise参数和状态
+        value => Promise.resolve(onFinally()).then(() => value),
+        reason => Promise.resolve(onFinally()).then(() => { throw reason })
+    );
+}
+
+Promise.all = function (array) {
+    // 返回一个promise，如果传入数组元素状态全部成功，则resolve，value为数组的resolve value数组
+    // 如果有一个元素状态为失败，则reject，reason为该元素失败原因
+    return new Promise((resolve, reject) => {
+        const res = [];
+
+        // 数组长度为空，同步resolve
+        if (array.length === 0) { return resolve(res) }
+
+        for (let index = 0; index < array.length; index++) {
+            const element = array[index];
+
+            // 元素可能不是promise对象，需要Promise.resolve处理
+            // 数组长度不为空，在then回调内resolve
+            Promise.resolve(element).then(
+                value => {
+                    res[index] = value;
+                    if (index + 1 === array.length) {
+                        resolve(res);
+                    }
+                },
+                reason => {
+                    reject(reason);
+                    return;
+                });
+        }
+    })
+}
+
+Promise.race = function (array) {
+    // 返回率先改变的promise实例的状态值，并由此确定race的promise状态
+    return new Promise((resolve, reject) => {
+
+        if (array.length === 0) { return }
+
+        for (let index = 0; index < array.length; index++) {
+            const element = array[index];
+
+            Promise.resolve(element).then(value => {
+                resolve(value);
+                return;
+            }, reason => {
+                reject(reason);
+                return;
+            });
+        }
+    });
+}
+
+Promise.any = function (array) {
+    // 与all相反，只要有一个状态为成功，则返回成功
+    // 如果全部失败，返回失败数组
+    return new Promise((resolve, reject) => {
+        const err = [];
+
+        for (let index = 0; index < array.length; index++) {
+            const element = array[index];
+
+            Promise.resolve(element).then(
+                value => {
+                    resolve(value);
+                    return;
+                },
+                reason => {
+                    err.push(new Error(reason));
+
+                    if (index + 1 === array.length) {
+                        reject(err);
+                    }
+                }
+            );
+        }
+    })
+}
+
+Promise.allSettled = function (array) {
+    return new Promise((resolve, reject) => {
+        const res = [];
+
+        for (let index = 0; index < array.length; index++) {
+            const element = array[index];
+
+            const p = Promise.resolve(element).then(
+                value => {
+                    res.push(1);
+                    console.log(index)
+                    if (index + 1 === array.length) {
+                        return resolve(res);
+                    }
+                },
+                reason => {
+                    res.push(1);
+                    console.log(index)
+
+                    if (index + 1 === array.length) {
+                        return resolve(res);
+                    }
+                }
+            )
+        }
+    })
+}
+
 // for promises-aplus-tests
 Promise.defer = Promise.deferred = function () {
     let dfd = {};
@@ -170,3 +312,45 @@ Promise.defer = Promise.deferred = function () {
 }
 
 module.exports = Promise;
+
+
+// const t = new Promise((resolve, reject) => {
+//     console.log('promise execute t start');
+//     const b = new Promise((res, rej) => {
+//         console.log('promise execute b start');
+//         rej('my pb');
+//         console.log('promise execute b end');
+//     });
+//     console.log('before res b', b);
+//     resolve(b);
+//     console.log('promise execute t end');
+//     // reject(2);
+// });
+// const bt = t.then((res) => { throw Error(res) }, rej => console.log('rej', rej));
+// console.log(t);
+// console.log('bt', bt);
+// // const a = bt.then(res => console.log('res', res), rej => console.log('rej', rej))
+// setTimeout(() => {
+//     console.log('t', t);
+//     console.log('bt1', bt);
+// }, 0);
+
+// Promise.race([
+//     new Promise((resolve, reject) => { setTimeout(() => { resolve(100) }, 1000) }),
+//     undefined,
+//     new Promise((resolve, reject) => { setTimeout(() => { reject(100) }, 100) })
+// ]).then((data) => {
+//     console.log('success ', data);
+// }, (err) => {
+//     console.log('err ', err);
+// });
+
+Promise.allSettled([
+    new Promise((resolve, reject) => { setTimeout(() => { resolve(100) }, 100) }),
+    new Promise((resolve, reject) => { setTimeout(() => { reject(200) }, 200) }),
+    new Promise((resolve, reject) => { setTimeout(() => { reject(100) }, 100) })
+]).then((data) => {
+    console.log('success ', data);
+}, (err) => {
+    console.log('err ', err);
+});
