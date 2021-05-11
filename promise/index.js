@@ -167,7 +167,7 @@ Promise.resolve = function (param) {
 
     // 如果是thenable对象，返回的promise会跟随该对象，采用其最终状态
     return new Promise((resolve, reject) => {
-        if (param && param.then && typeof then === 'function') {
+        if (param && param.then && typeof param.then === 'function') {
             setTimeout(() => {
                 param.then(resolve, reject);
             }, 0);
@@ -203,6 +203,7 @@ Promise.all = function (array) {
     // 如果有一个元素状态为失败，则reject，reason为该元素失败原因
     return new Promise((resolve, reject) => {
         const res = [];
+        let resolvedNum = 0;
 
         // 数组长度为空，同步resolve
         if (array.length === 0) { return resolve(res) }
@@ -215,7 +216,7 @@ Promise.all = function (array) {
             Promise.resolve(element).then(
                 value => {
                     res[index] = value;
-                    if (index + 1 === array.length) {
+                    if (++resolvedNum === array.length) {
                         resolve(res);
                     }
                 },
@@ -252,6 +253,7 @@ Promise.any = function (array) {
     // 如果全部失败，返回失败数组
     return new Promise((resolve, reject) => {
         const err = [];
+        let rejectedNum = 0;
 
         for (let index = 0; index < array.length; index++) {
             const element = array[index];
@@ -264,7 +266,7 @@ Promise.any = function (array) {
                 reason => {
                     err.push(new Error(reason));
 
-                    if (index + 1 === array.length) {
+                    if (++rejectedNum === array.length) {
                         reject(err);
                     }
                 }
@@ -276,24 +278,24 @@ Promise.any = function (array) {
 Promise.allSettled = function (array) {
     return new Promise((resolve, reject) => {
         const res = [];
+        let settledNum = 0; // 闭包变量，当其为数组长度时，promise数组的所有元素状态已定
 
         for (let index = 0; index < array.length; index++) {
             const element = array[index];
 
-            const p = Promise.resolve(element).then(
+            Promise.resolve(element).then(
                 value => {
-                    res.push(1);
-                    console.log(index)
-                    if (index + 1 === array.length) {
-                        return resolve(res);
+                    res.push({ statue: FULFILLED, value });
+
+                    if (++settledNum === array.length) {
+                        resolve(res);
                     }
                 },
                 reason => {
-                    res.push(1);
-                    console.log(index)
+                    res.push({ status: REJECTED, reason });
 
-                    if (index + 1 === array.length) {
-                        return resolve(res);
+                    if (++settledNum === array.length) {
+                        resolve(res);
                     }
                 }
             )
@@ -312,45 +314,3 @@ Promise.defer = Promise.deferred = function () {
 }
 
 module.exports = Promise;
-
-
-// const t = new Promise((resolve, reject) => {
-//     console.log('promise execute t start');
-//     const b = new Promise((res, rej) => {
-//         console.log('promise execute b start');
-//         rej('my pb');
-//         console.log('promise execute b end');
-//     });
-//     console.log('before res b', b);
-//     resolve(b);
-//     console.log('promise execute t end');
-//     // reject(2);
-// });
-// const bt = t.then((res) => { throw Error(res) }, rej => console.log('rej', rej));
-// console.log(t);
-// console.log('bt', bt);
-// // const a = bt.then(res => console.log('res', res), rej => console.log('rej', rej))
-// setTimeout(() => {
-//     console.log('t', t);
-//     console.log('bt1', bt);
-// }, 0);
-
-// Promise.race([
-//     new Promise((resolve, reject) => { setTimeout(() => { resolve(100) }, 1000) }),
-//     undefined,
-//     new Promise((resolve, reject) => { setTimeout(() => { reject(100) }, 100) })
-// ]).then((data) => {
-//     console.log('success ', data);
-// }, (err) => {
-//     console.log('err ', err);
-// });
-
-Promise.allSettled([
-    new Promise((resolve, reject) => { setTimeout(() => { resolve(100) }, 100) }),
-    new Promise((resolve, reject) => { setTimeout(() => { reject(200) }, 200) }),
-    new Promise((resolve, reject) => { setTimeout(() => { reject(100) }, 100) })
-]).then((data) => {
-    console.log('success ', data);
-}, (err) => {
-    console.log('err ', err);
-});
