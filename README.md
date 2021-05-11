@@ -1,22 +1,27 @@
-# algorithm
+# 🍛 algorithm
+
 sort、promise、bind、new、debounce and so on
 
-## sort
+## 🍖 sort
 
-## apply、call、bind
+## 🦴 promise source code
 
-## debounce、throttle
+## 🍗 async、await source code
 
-## deep clone
+## 🍗 apply、call、bind
 
-## event-emitter
+## 🍗 debounce、throttle
 
-## prototype
+## 🍗 deep clone
 
-## instanceof
+## 🍗 event-emitter
 
-## topics
+## 🍗 prototype
 
-### event loop
+## 🍗 instanceof
 
-### this
+## 🥘 topics
+
+### 🧀 event loop
+
+### 🥞 this
