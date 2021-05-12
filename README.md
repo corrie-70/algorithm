@@ -10,7 +10,7 @@ sort、promise、bind、new、debounce and so on
 
 ## 🦴 built-in function
 
-apply、call、bind、Object.create
+apply、call、bind、Object.create、softBind
 
 ## 🍗 debounce、throttle
 
