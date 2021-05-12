@@ -8,7 +8,9 @@ sort、promise、bind、new、debounce and so on
 
 ## 🍗 async、await source code
 
-## 🍗 apply、call、bind
+## 🍗 built-in function
+
+apply、call、bind
 
 ## 🍗 debounce、throttle
 
