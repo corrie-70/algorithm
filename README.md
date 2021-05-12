@@ -22,7 +22,7 @@ apply、call、bind
 
 ## 🍗 curry
 
-## 🍗 extends
+## 🦴 inheritance
 
 ## 🥘 topics
 
