@@ -16,9 +16,11 @@ sort、promise、bind、new、debounce and so on
 
 ## 🍗 event-emitter
 
-## 🍗 prototype
-
 ## 🍗 instanceof
+
+## 🍗 curry
+
+## 🍗 extends
 
 ## 🥘 topics
 
