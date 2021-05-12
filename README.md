@@ -18,7 +18,7 @@ apply、call、bind、Object.create、softBind
 
 ## 🍗 event-emitter
 
-## 🍗 instanceof
+## 🦴 instanceof
 
 ## 🦴 new
 
