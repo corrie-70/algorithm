@@ -22,7 +22,7 @@ apply、call、bind、Object.create、softBind
 
 ## 🦴 new
 
-## 🍗 curry
+## 🦴 curry
 
 ## 🦴 inheritance
 
