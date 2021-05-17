@@ -6,7 +6,7 @@ sort、promise、bind、new、debounce and so on
 
 ## 🦴 promise source code
 
-## 🍗 async、await source code
+## 🦴 async、await source code
 
 ## 🦴 built-in function
 
