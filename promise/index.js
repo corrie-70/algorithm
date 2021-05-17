@@ -285,7 +285,7 @@ Promise.allSettled = function (array) {
 
             Promise.resolve(element).then(
                 value => {
-                    res.push({ statue: FULFILLED, value });
+                    res.push({ status: FULFILLED, value });
 
                     if (++settledNum === array.length) {
                         resolve(res);
