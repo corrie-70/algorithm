@@ -26,7 +26,7 @@ apply、call、bind、Object.create、softBind
 
 ## 🦴 inheritance
 
-## 🍗 array
+## 🦴 array
 
 distinct（去重）、flatten（扁平化）
 
