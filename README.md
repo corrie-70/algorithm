@@ -12,9 +12,9 @@ sort、promise、bind、new、debounce and so on
 
 apply、call、bind、Object.create、softBind
 
-## 🍗 debounce、throttle
+## 🦴 debounce、throttle
 
-## 🍗 deep clone
+## 🦴 deep clone
 
 ## 🍗 event-emitter
 
