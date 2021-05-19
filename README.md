@@ -16,7 +16,7 @@ apply、call、bind、Object.create、softBind
 
 ## 🦴 deep clone
 
-## 🍗 event-emitter
+## 🦴 event-emitter
 
 ## 🦴 instanceof
 
@@ -25,6 +25,10 @@ apply、call、bind、Object.create、softBind
 ## 🦴 curry
 
 ## 🦴 inheritance
+
+## 🍗 array
+
+distinct（去重）、flatten（扁平化）
 
 ## 🥘 topics
 
