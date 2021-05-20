@@ -1,43 +1,56 @@
 /**
  * 堆排序
  * 选择排序的优化排序算法
- * 构建大顶堆，得到当前数组最大值，将其交换至末尾，固定其值
- * 剩余数组元素继续构建大顶堆，得到第二大值，固定其位置
+ * 首先是写筛选算法，然后是将无序序列构建为大顶堆
+ * 构建思路是从最后一个非叶子节点开始筛选，逐级向上，递归调用筛选算法
+ * 这样就满足了筛选算法的前提，即左右子树已经是大顶堆数组
+ * 最后是将筛选出的大值固定至数组尾部，再重新对无序区进行筛选
+ * 由于只交换了顶部值，所以再做一次筛选即可构建新的大顶堆
  * @param array
  */
-function heapSort(array: number[]): number[] {
-    adjustHeapPeak(array);
-    return [];
+function heapSort(array: number[]) {
+    const len = array.length;
+
+    for (let i = Math.floor(len / 2) - 1; i >= 0; i--) {
+        sift(array, i, len - 1);
+    }
+
+    for (let j = len - 1; j >= 1; j--) {
+        [array[0], array[j]] = [array[j], array[0]];
+        sift(array, 0, j - 1);
+    }
 }
 
 /**
- * 调整大顶堆数组
- * 元素的子节点序号为 2*index+1，2*index+2
- * 数组最后一个非叶子节点 array.length / 2 - 1
+ * 筛选算法建堆
+ * 假设左子树和右子树都满足大顶堆定义，调整顶部元素到合适位置
  * @param array
+ * @param low 顶部元素索引
+ * @param high 末尾元素索引
  */
-function adjustHeapPeak(array: number[]): number {
-    const lastParentIndex = Math.floor(array.length / 2) - 1;
+function sift(array: number[], low: number, high: number) {
+    let i = low,
+        j = 2 * i + 1,
+        temp = array[i];
 
-    // 比较父节点与叶子节点大小，得到三个元素中最大值的索引
-    let switchIndex = lastParentIndex;
-    if (array[switchIndex] < array[2 * lastParentIndex + 1]) {
-        switchIndex = 2 * lastParentIndex + 1;
+    while (j <= high) {
+        if (j + 1 <= high && array[j + 1] > array[j]) {
+            j++;
+        }
+
+        if (temp < array[j]) {
+            array[i] = array[j];
+            i = j;
+            j = 2 * i + 1;
+        } else {
+            break;
+        }
     }
-    if (array[switchIndex] < array[2 * lastParentIndex + 2]) {
-        switchIndex = 2 * lastParentIndex + 2;
-    }
 
-    // 交换最大值到顶点
-    [array[lastParentIndex], array[switchIndex]] = [
-        array[switchIndex],
-        array[lastParentIndex],
-    ];
-
-    return lastParentIndex;
+    array[i] = temp;
 }
 
-const test = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const test = [4, 7, 6, 5, 3, 2, 8, 1];
 
-console.log(adjustHeapPeak(test));
-console.log(test);
+heapSort(test);
+console.log("test", test);
