@@ -33,7 +33,7 @@ function bucketSort(array: number[]): number[] {
     }
     bucketArr[count].push(element);
   }
-  console.log("bucketArr", bucketArr);
+
   for (let i = 0; i < bucketArr.length; i++) {
     // 对桶内元素进行快速排序或归并排序
     const element = bucketArr[i];
