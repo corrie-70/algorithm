@@ -2,7 +2,7 @@
 
 sort、promise、bind、new、debounce and so on
 
-## 🍖 sort
+## 🦴 sort
 
 ## 🦴 promise source code
 
