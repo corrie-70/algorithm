@@ -346,6 +346,27 @@ function radixSort(array: number[]): number[] {
 }
 ```
 
+## 排序算法对比
+
+![img](https://github.com/corrie-70/images/blob/master/algorithm/img-01.PNG?raw=true)
+
+### 按算法平均时间复杂度分类
+
+- 平方阶O(n²)：插入排序、选择排序和冒泡排序。
+- 线性对数阶O(n log n) ：快速排序、堆排序和归并排序。
+- 线性阶O(n) ：基数排序、计数排序
+
+### 按空间复杂度分类
+
+- O(n) ：归并排序，基数排序为O(r)
+- O(log n)：快速排序
+- O(1)：其他排序方法
+
+### 按算法稳定性分类
+
+- 不稳定的：希尔排序、快速排序、堆排序、选择排序
+- 稳定的：其他排序方法
+
 ## 参考文献
 
 [必学十大经典排序算法，看这篇就够了](https://zhuanlan.zhihu.com/p/57088609)
