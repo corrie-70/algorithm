@@ -10,14 +10,15 @@
 
 ```js
 function selectSort(arr: number[]) {
-    for (let i = 0; i < arr.length - 1; ) {
-        for (let j = i + 1; j < arr.length; ) {
-            if (arr[j] < arr[i]) {
-                [arr[i], arr[j]] = [arr[j], arr[i]];
+    for (let i = 0; i < arr.length - 1; i++) {
+        let min = i;
+        for (let j = i + 1; j < arr.length; j++) {
+            if (arr[j] < arr[min]) {
+                min = j;
             }
-            j++;
         }
-        i++;
+
+        [arr[i], arr[min]] = [arr[min], arr[i]];
     }
 }
 ```
