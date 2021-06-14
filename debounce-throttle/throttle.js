@@ -9,6 +9,13 @@ const setUseAction = throttle(getUserAction, 1000);
 
 container.onmousemove = setUseAction;
 
+/**
+ * 节流函数
+ * 持续触发fn事件，在delay时间内，只执行一次
+ * @param {*} fn 
+ * @param {*} delay 
+ * @returns 
+ */
 function throttle(fn, delay) {
     let context;
 
