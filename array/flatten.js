@@ -30,5 +30,8 @@ function flatten2(array) {
 
 const test = [1, 2, [3, 4, [5]]];
 
+const res = test.flat(3); // 最新规范
+
 console.log(flatten(test));
 console.log(flatten2(test));
+console.log("=======", res);
