@@ -30,6 +30,8 @@ apply、call、bind、Object.create、softBind
 
 distinct（去重）、flatten（扁平化）
 
+## 🍗 binarry tree
+
 ## 🥘 topics
 
 ### 🧀 event loop
