@@ -16,6 +16,8 @@ apply、call、bind、Object.create、softBind
 
 ## 🦴 deep clone
 
+通过map缓存对象值，解决循环引用问题。
+
 ## 🦴 event-emitter
 
 ## 🦴 instanceof

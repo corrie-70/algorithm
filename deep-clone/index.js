@@ -1,3 +1,8 @@
+/**
+ * 深拷贝简版
+ * @param {*} obj 
+ * @returns 
+ */
 function deepClone(obj) {
     if (typeof obj !== 'object') { return obj; }
 
