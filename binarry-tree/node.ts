@@ -1,9 +1,11 @@
 export class TreeNode {
     value: number;
-    left: TreeNode | undefined;
-    right: TreeNode | undefined;
+    left?: TreeNode;
+    right?: TreeNode;
 
-    constructor(value: number) {
+    constructor(value: number, left?: TreeNode, right?: TreeNode) {
         this.value = value;
+        this.left = left;
+        this.right = right;
     }
 }
